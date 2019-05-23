@@ -1,6 +1,7 @@
-const {isFunction} = require('core-util-is')
+const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const next = require('next')
+const webpackModule = require('webpack')
 const {
   PHASE_PRODUCTION_BUILD,
   PHASE_PRODUCTION_SERVER,
@@ -29,10 +30,6 @@ const composeNext = ({
   anchor,
   configFilepath
 }) => {
-  if (!anchor) {
-    return prev
-  }
-
   if (!isFunction(anchor)) {
     throw error('INVALID_ANCHOR_TYPE', configFilepath, anchor)
   }
@@ -51,8 +48,31 @@ const composeNext = ({
   return result
 }
 
-const composeNextWebpack = ({}) => {
-  // TODO
+const runWebpackFactory = (factory, configFilepath, ...args) => {
+  const config = factory(...args)
+
+  if (!isObject(config)) {
+    throw error('INVALID_WEBPACK_ANCHOR_RETURN_TYPE', configFilepath, config)
+  }
+
+  return config
+}
+
+const composeNextWebpack = ({
+  prev,
+  anchor,
+  configFilepath
+}) => {
+  if (!isFunction(anchor)) {
+    throw error('INVALID_WEBPACK_ANCHOR_TYPE', configFilepath, anchor)
+  }
+
+  return prev
+    ? (...args) => {
+      const config = prev(...args)
+      return runWebpackFactory(anchor, configFilepath, ...args)
+    }
+    : (...args) => runWebpackFactory(anchor, configFilepath, ...args)
 }
 
 // Thinking(DONE):
@@ -73,6 +93,7 @@ module.exports = class NextBlock extends Block {
         type: 'compose',
         // For binder, which means that
         // the binder could skip defining the nextWebpack
+        // allow that the anchor is not found in each layer
         optional: true,
         compose: composeNextWebpack
       }
@@ -101,8 +122,6 @@ module.exports = class NextBlock extends Block {
       config.nextWebpack
     )
 
-    this.hooks.config.call(nextConfig)
-
     return next({
       dev,
       conf: nextConfig,
@@ -121,7 +140,35 @@ module.exports = class NextBlock extends Block {
       {}
     )
 
+    this._mergeWebpackFactory(nextConfig, webpackConfigFactory)
+    this.hooks.config.call(nextConfig, phase)
 
+    return nextConfig
+  }
+
+  _mergeWebpackFactory (nextConfig, webpackConfigFactory) {
+    const {webpack} = nextConfig
+
+    nextConfig.webpack = (webpackConfig, nextOptions) => {
+      if (webpack) {
+        webpackConfig = webpack(webpackConfig, nextOptions)
+
+        if (!isObject(webpackConfig)) {
+          throw error('INVALID_NEXT_WEBPACK_RETURN_TYPE', webpackConfig)
+        }
+      }
+
+      if (webpackConfigFactory) {
+        webpackConfig = webpackConfigFactory(
+          webpackConfig,
+          nextOptions,
+          webpackModule
+        )
+      }
+
+      this.hooks.webpackConfig.call(webpackConfig, nextOptions)
+      return webpackConfig
+    }
   }
 
   async _prepare () {

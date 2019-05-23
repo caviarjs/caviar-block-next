@@ -6,10 +6,20 @@ const {error, E, TE} = new Errors({
   notDefined: exitOnNotDefined
 })
 
-TE('INVALID_ANCHOR_TYPE', 'the config anchor of next in "%s" must be a function')
+TE('INVALID_ANCHOR_TYPE',
+  'the config anchor of next in "%s" must be a function')
 
 TE('INVALID_ANCHOR_RETURN_TYPE',
   'the config anchor of next in "%s" should return a function by using the first argument `withPlugins`')
+
+TE('INVALID_WEBPACK_ANCHOR_TYPE',
+  'the config anchor of nextWebpack in "%s" must be a function')
+
+TE('INVALID_WEBPACK_ANCHOR_RETURN_TYPE',
+  'the config anchor of nextWebpack in "%s" should return an object')
+
+TE('INVALID_NEXT_WEBPACK_RETURN_TYPE',
+  'nextConfig.webpack should return an object')
 
 const MORE_INFO = ', see "https://github.com/caviarjs/next-block#composeplugins-nextconfigmixins" for details'
 
