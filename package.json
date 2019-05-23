@@ -1,11 +1,11 @@
 {
-  "name": "@caviar/block-next",
+  "name": "@caviar/next-block",
   "version": "1.0.0",
   "description": "The official caviar block for next",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_DEBUG=@caviar/block-next nyc ava --timeout=10s --verbose",
-    "test:dev": "NODE_DEBUG=@caviar/block-next nyc ava --timeout=10s --verbose && npm run report:dev",
+    "test": "NODE_DEBUG=@caviar/next-block nyc ava --timeout=10s --verbose",
+    "test:dev": "NODE_DEBUG=@caviar/next-block nyc ava --timeout=10s --verbose && npm run report:dev",
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "posttest": "npm run report",
@@ -18,10 +18,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/caviarjs/caviar-block-next.git"
+    "url": "git://github.com/caviarjs/next-block.git"
   },
   "keywords": [
-    "@caviar/block-next"
+    "@caviar/next-block",
+    "caviar-block",
+    "caviar",
+    "next",
+    "operation"
   ],
   "engines": {
     "node": ">= 6"
@@ -35,7 +39,7 @@
   "author": "caviarjs",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/caviarjs/caviar-block-next/issues"
+    "url": "https://github.com/caviarjs/next-block/issues"
   },
   "devDependencies": {
     "@ostai/eslint-config": "^3.1.1",

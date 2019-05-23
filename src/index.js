@@ -25,7 +25,6 @@ const createNextWithPlugins = (configFilepath, config) => {
 }
 
 const composeNext = ({
-  // key,
   prev,
   anchor,
   configFilepath
@@ -52,7 +51,7 @@ const composeNext = ({
   return result
 }
 
-const composeNextWebpack = () => {
+const composeNextWebpack = ({}) => {
   // TODO
 }
 
@@ -62,7 +61,7 @@ module.exports = class NextBlock extends Block {
   constructor () {
     super()
 
-    // Orchestrator will check the config structure
+    // Binder will check the config structure
     // this.config is a setter
     this.config = {
       next: {
@@ -72,8 +71,8 @@ module.exports = class NextBlock extends Block {
 
       nextWebpack: {
         type: 'compose',
-        // For orchestrator, which means that
-        // the orchestrator could skip defining the nextWebpack
+        // For binder, which means that
+        // the binder could skip defining the nextWebpack
         optional: true,
         compose: composeNextWebpack
       }
@@ -116,12 +115,13 @@ module.exports = class NextBlock extends Block {
     nextConfigFactory,
     webpackConfigFactory
   ) {
-
-    factory(
+    const nextConfig = nextConfigFactory(
       phase,
       // {defaultConfig: undefined}
       {}
     )
+
+
   }
 
   async _prepare () {

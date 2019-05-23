@@ -1,31 +1,31 @@
-[![Build Status](https://travis-ci.org/caviarjs/caviar-block-next.svg?branch=master)](https://travis-ci.org/caviarjs/caviar-block-next)
-[![Coverage](https://codecov.io/gh/caviarjs/caviar-block-next/branch/master/graph/badge.svg)](https://codecov.io/gh/caviarjs/caviar-block-next)
+[![Build Status](https://travis-ci.org/caviarjs/next-block.svg?branch=master)](https://travis-ci.org/caviarjs/next-block)
+[![Coverage](https://codecov.io/gh/caviarjs/next-block/branch/master/graph/badge.svg)](https://codecov.io/gh/caviarjs/next-block)
 <!-- optional appveyor tst
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/caviarjs/caviar-block-next?branch=master&svg=true)](https://ci.appveyor.com/project/caviarjs/caviar-block-next)
+[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/caviarjs/next-block?branch=master&svg=true)](https://ci.appveyor.com/project/caviarjs/next-block)
 -->
 <!-- optional npm version
-[![NPM version](https://badge.fury.io/js/@caviar/block-next.svg)](http://badge.fury.io/js/@caviar/block-next)
+[![NPM version](https://badge.fury.io/js/@caviar/next-block.svg)](http://badge.fury.io/js/@caviar/next-block)
 -->
 <!-- optional npm downloads
-[![npm module downloads per month](http://img.shields.io/npm/dm/@caviar/block-next.svg)](https://www.npmjs.org/package/@caviar/block-next)
+[![npm module downloads per month](http://img.shields.io/npm/dm/@caviar/next-block.svg)](https://www.npmjs.org/package/@caviar/next-block)
 -->
 <!-- optional dependency status
-[![Dependency Status](https://david-dm.org/caviarjs/caviar-block-next.svg)](https://david-dm.org/caviarjs/caviar-block-next)
+[![Dependency Status](https://david-dm.org/caviarjs/next-block.svg)](https://david-dm.org/caviarjs/next-block)
 -->
 
-# @caviar/block-next
+# @caviar/next-block
 
 The official caviar block for next.
 
 ## Install
 
 ```sh
-$ npm i @caviar/block-next
+$ npm i @caviar/next-block
 ```
 
 ## Usage
 
-For most scenarios, `@caviar/block-next` is used by a caviar orchestrator and usually should not be used directly.
+For most scenarios, `@caviar/next-block` is used by a caviar binder and usually should not be used directly.
 
 ### Config
 
@@ -49,7 +49,7 @@ module.exports = {
   [nextWebpackAnchorName] (
     webpackConfig,
     nextOptions,
-    // The webpack module which `@caviar/block-next` uses
+    // The webpack module which `@caviar/next-block` uses
     // as the 3rd argument
     webpackModule
   ) {
@@ -69,7 +69,7 @@ module.exports = {
 }
 ```
 
-- **nextAnchorName** `string` the name/key of the config anchor which is defined by the orchestrator who uses `@caviar/block-next`
+- **nextAnchorName** `string` the name/key of the config anchor which is defined by the binder who uses `@caviar/next-block`
 
 - **nextWebpackAnchorName** `string` the name of the config anchor for next webpack.
 

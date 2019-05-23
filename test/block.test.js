@@ -1,5 +1,5 @@
 const test = require('ava')
-const log = require('util').debuglog('@caviar/block-next')
+const log = require('util').debuglog('@caviar/next-block')
 const block_next = require('../src')
 
 test('description', t => {
