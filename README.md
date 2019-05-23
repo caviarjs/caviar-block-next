@@ -27,11 +27,14 @@ $ npm i @caviar/block-next
 
 For most scenarios, `@caviar/block-next` is used by a caviar orchestrator and usually should not be used directly.
 
+### Config
+
 In `caviar.config.js`
 
 ```js
 module.exports = {
-  ...,
+  ...otherAnchors,
+
   [nextAnchorName] (compose) {
 
     // The config anchor of next should always returns
