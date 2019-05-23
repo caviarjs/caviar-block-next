@@ -15,7 +15,7 @@
 
 # @caviar/block-next
 
-The official caviar block for next
+The official caviar block for next.
 
 ## Install
 
@@ -25,9 +25,37 @@ $ npm i @caviar/block-next
 
 ## Usage
 
+For most scenarios, `@caviar/block-next` is used by a caviar orchestrator and should not be used directly.
+
+In `caviar.config.js`
+
 ```js
-const block_next = require('@caviar/block-next')
+module.exports = {
+  ...,
+  [nextAnchorName] (compose) {
+
+    // The config anchor of next should always returns
+    // a FUNCTION!
+    return compose([
+      withCSS
+    ], {
+      distDir: '.next'
+    })
+  }
+}
 ```
+
+- **nextAnchorName** `string` the name/key of the config anchor which is defined by the orchestrator who uses `@caviar/block-next`
+
+### compose(plugins, nextConfigMixins)
+### compose(nextConfigMixins)
+
+As the first and the only argument of the config anchor function, `compose` is actually the `withPlugins` method of [`next-compose-plugins`](https://www.npmjs.com/package/next-compose-plugins)
+
+- **plugins** `Array<NextPlugin | [NextPlugin, NextPluginOptions]>` Array of next plugin instances. The first parameter of `withPlugins`
+- **nextConfigMixins?** `Object={}` the extra config to mix into the current next configuration. The second parameter of `withPlugins`
+
+## Hooks
 
 ## License
 
