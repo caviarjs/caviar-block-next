@@ -1,6 +1,11 @@
-const {isString, isFunction, isObject, isArray} = require('core-util-is')
+const {isFunction} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const next = require('next')
+const {
+  PHASE_PRODUCTION_BUILD,
+  PHASE_PRODUCTION_SERVER,
+  PHASE_DEVELOPMENT_SERVER
+} = require('next/constants')
 const {
   SyncHook
 } = require('tapable')
@@ -8,13 +13,13 @@ const {Block} = require('caviar')
 const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
 
-const createNextWithPlugins = config => {
+const createNextWithPlugins = (configFilepath, config) => {
   const wp = config
     ? extend(config).withPlugins
     : withPlugins
 
   return (...args) => {
-    const [plugins, options] = withPluginsArgs(...args)
+    const [plugins, options] = withPluginsArgs(configFilepath, ...args)
     return wp(plugins, options)
   }
 }
@@ -38,7 +43,7 @@ const composeNext = ({
   // module.exports = withPlugins => withPlugins([...plugins], newConfig)
   // ```
   // withPlugins <- createNextWithPlugins(prev)
-  const result = anchor(createNextWithPlugins(prev))
+  const result = anchor(createNextWithPlugins(configFilepath, prev))
 
   if (!isFunction(result)) {
     throw error('INVALID_ANCHOR_RETURN_TYPE', configFilepath, result)
@@ -67,13 +72,17 @@ module.exports = class NextBlock extends Block {
 
       nextWebpack: {
         type: 'compose',
+        // For orchestrator, which means that
+        // the orchestrator could skip defining the nextWebpack
+        optional: true,
         compose: composeNextWebpack
       }
     }
 
     // this.hooks is a setter
     this.hooks = {
-      config: new SyncHook()
+      config: new SyncHook('nextConfig'),
+      webpackConfig: new SyncHook(['webpackConfig', 'nextContext'])
     }
   }
 
@@ -83,10 +92,14 @@ module.exports = class NextBlock extends Block {
   //   - cwd
   //   - dev
   async _create (config, {dev, cwd}) {
-    const nextConfig = config.next(
+    const phase = dev
+      ? PHASE_DEVELOPMENT_SERVER
+      : PHASE_PRODUCTION_SERVER
+
+    const nextConfig = this._createNextConfig(
       phase,
-      // {defaultConfig: undefined}
-      {}
+      config.next,
+      config.nextWebpack
     )
 
     this.hooks.config.call(nextConfig)
@@ -96,6 +109,19 @@ module.exports = class NextBlock extends Block {
       conf: nextConfig,
       dir: cwd
     })
+  }
+
+  _createNextConfig (
+    phase,
+    nextConfigFactory,
+    webpackConfigFactory
+  ) {
+
+    factory(
+      phase,
+      // {defaultConfig: undefined}
+      {}
+    )
   }
 
   async _prepare () {

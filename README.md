@@ -25,7 +25,7 @@ $ npm i @caviar/block-next
 
 ## Usage
 
-For most scenarios, `@caviar/block-next` is used by a caviar orchestrator and should not be used directly.
+For most scenarios, `@caviar/block-next` is used by a caviar orchestrator and usually should not be used directly.
 
 In `caviar.config.js`
 
@@ -41,21 +41,52 @@ module.exports = {
     ], {
       distDir: '.next'
     })
+  },
+
+  [nextWebpackAnchorName] (
+    webpackConfig,
+    nextOptions,
+    // The webpack module which `@caviar/block-next` uses
+    // as the 3rd argument
+    webpackModule
+  ) {
+
+    // Only add the DefinePlugin for client side
+    if (nextOptions.isServer) {
+      webpackConfig.plugins.push(
+        new webpackModule.DefinePlugin({
+          ...
+        })
+      )
+    }
+
+    // This method must return an object
+    return webpackConfig
   }
 }
 ```
 
 - **nextAnchorName** `string` the name/key of the config anchor which is defined by the orchestrator who uses `@caviar/block-next`
 
-### compose(plugins, nextConfigMixins)
-### compose(nextConfigMixins)
+- **nextWebpackAnchorName** `string` the name of the config anchor for next webpack.
 
-As the first and the only argument of the config anchor function, `compose` is actually the `withPlugins` method of [`next-compose-plugins`](https://www.npmjs.com/package/next-compose-plugins)
+### compose(plugins, nextConfigMixins): Function
+### compose(nextConfigMixins): Function
+
+As the first and the only argument of the config anchor function, `compose` is actually the `withPlugins` method of [`next-compose-plugins`](https://www.npmjs.com/package/next-compose-plugins). `compose` extends the next config of the underlying caviar [layer], and provides the ability to merge the config from the current layer with the support of next build phases (such as `require('next/constants').PHASE_PRODUCTION_BUILD`).
 
 - **plugins** `Array<NextPlugin | [NextPlugin, NextPluginOptions]>` Array of next plugin instances. The first parameter of `withPlugins`
 - **nextConfigMixins?** `Object={}` the extra config to mix into the current next configuration. The second parameter of `withPlugins`
 
 ## Hooks
+
+### ...builtInBlockHooks
+
+See [Caviar Blocks]
+
+### config
+
+### webpackConfig
 
 ## License
 
