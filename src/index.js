@@ -68,9 +68,16 @@ const composeNextWebpack = ({
   }
 
   return prev
-    ? (...args) => {
-      const config = prev(...args)
-      return runWebpackFactory(anchor, configFilepath, ...args)
+    ? (webpackConfig, nextOptions, wpModule) => {
+      const config = prev(
+        webpackConfig,
+        nextOptions,
+        wpModule
+      )
+      return runWebpackFactory(anchor, configFilepath,
+        config,
+        nextOptions,
+        wpModule)
     }
     : (...args) => runWebpackFactory(anchor, configFilepath, ...args)
 }
