@@ -1,9 +1,10 @@
+const {parse} = require('url')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const next = require('next')
 const webpackModule = require('webpack')
 const {
-  PHASE_PRODUCTION_BUILD,
+  // PHASE_PRODUCTION_BUILD,
   PHASE_PRODUCTION_SERVER,
   PHASE_DEVELOPMENT_SERVER
 } = require('next/constants')
@@ -189,23 +190,20 @@ module.exports = class NextBlock extends Block {
     const handler = nextApp.getRequestHandler()
     const middleware = (req, res) => {
       const {
-        [e2k.CONTEXT]: ctx
-      } = req
-
-      const {
         params = {},
         url
-      } = ctx
+      } = req
 
       const {
         pathname,
         query
-      } = parse(url)
+      } = parse(url, true)
 
       const parsedUrl = {
         pathname,
         query: {
           ...query,
+          // So that we could get router params in getInitialProps
           ...params
         }
       }
