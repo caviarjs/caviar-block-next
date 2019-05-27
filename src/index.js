@@ -5,14 +5,19 @@ const e2k = require('express-to-koa')
 const next = require('next')
 const webpackModule = require('webpack')
 const {
-  // PHASE_PRODUCTION_BUILD,
+  PHASE_PRODUCTION_BUILD,
   PHASE_PRODUCTION_SERVER,
   PHASE_DEVELOPMENT_SERVER
 } = require('next/constants')
 const {
   SyncHook
 } = require('tapable')
-const {Block} = require('caviar')
+const {
+  Block,
+  utils: {
+    requireModule
+  }
+} = require('caviar')
 const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
 
@@ -115,29 +120,6 @@ class NextBlock extends Block {
     }
   }
 
-  // Override
-  // - config `Object` the composed configuration
-  // - caviarOptions `Object`
-  //   - cwd
-  //   - dev
-  async _create (config, {dev, cwd, phase}) {
-    const nextPhase = dev
-      ? PHASE_DEVELOPMENT_SERVER
-      : PHASE_PRODUCTION_SERVER
-
-    const nextConfig = this._createNextConfig(
-      phase,
-      config.next,
-      config.nextWebpack
-    )
-
-    return next({
-      dev,
-      conf: nextConfig,
-      dir: cwd
-    })
-  }
-
   _createNextConfig (
     phase,
     nextConfigFactory,
@@ -180,8 +162,44 @@ class NextBlock extends Block {
     }
   }
 
-  async _ready () {
+  // Override
+  // - config `Object` the composed configuration
+  // - caviarOptions `Object`
+  //   - cwd
+  //   - dev
+  async _build (config, {dev, cwd}) {
+    if (dev) {
+      return
+    }
+
+    const nextConfig = this._createNextConfig(
+      PHASE_PRODUCTION_BUILD,
+      config.next,
+      config.webpack
+    )
+
+    await requireModule('next/dist/build')(cwd, nextConfig)
+  }
+
+  async _ready (config, {dev, cwd}) {
+    const phase = dev
+      ? PHASE_DEVELOPMENT_SERVER
+      : PHASE_PRODUCTION_SERVER
+
+    const nextConfig = this._createNextConfig(
+      phase,
+      config.next,
+      config.nextWebpack
+    )
+
+    const app = next({
+      dev,
+      conf: nextConfig,
+      dir: cwd
+    })
+
     await this.outlet.prepare()
+    return app
   }
 
   // Custom public methods
