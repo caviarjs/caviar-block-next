@@ -1,6 +1,7 @@
 const {parse} = require('url')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
+const e2k = require('express-to-koa')
 const next = require('next')
 const webpackModule = require('webpack')
 const {
@@ -85,7 +86,7 @@ const composeNextWebpack = ({
 
 // Thinking(DONE):
 // inherit or delegate? inherit
-module.exports = class NextBlock extends Block {
+class NextBlock extends Block {
   constructor () {
     super()
 
@@ -119,8 +120,8 @@ module.exports = class NextBlock extends Block {
   // - caviarOptions `Object`
   //   - cwd
   //   - dev
-  async _create (config, {dev, cwd}) {
-    const phase = dev
+  async _create (config, {dev, cwd, phase}) {
+    const nextPhase = dev
       ? PHASE_DEVELOPMENT_SERVER
       : PHASE_PRODUCTION_SERVER
 
@@ -179,17 +180,18 @@ module.exports = class NextBlock extends Block {
     }
   }
 
-  async _prepare () {
+  async _ready () {
     await this.outlet.prepare()
   }
 
   // Custom public methods
   middleware () {
-    // TODO: outlet ?
     const nextApp = this.outlet
     const handler = nextApp.getRequestHandler()
     const middleware = (req, res) => {
       const {
+        // If you use a koa-based server
+        // const e2k = require('express-to-koa')
         params = {},
         url
       } = req
@@ -214,3 +216,16 @@ module.exports = class NextBlock extends Block {
     return middleware
   }
 }
+
+NextBlock.middleware2Koa = middleware => ctx => {
+  const {req} = ctx
+
+  req.params = {
+    ...req.params,
+    ...ctx.params
+  }
+
+  return e2k(middleware)
+}
+
+module.exports = NextBlock

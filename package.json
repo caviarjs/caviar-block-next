@@ -54,6 +54,7 @@
   "dependencies": {
     "core-util-is": "^1.0.2",
     "err-object": "^4.5.0",
+    "express-to-koa": "^1.2.0",
     "next-compose-plugins": "^2.2.0",
     "tapable": "^1.1.3"
   },
