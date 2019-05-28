@@ -91,6 +91,8 @@ See [Caviar Blocks]
 
 Triggered after the next config is generated and before using.
 
+Callback parameters:
+
 - **nextConfig**
 - **phase**
 - **caviarOptions**
