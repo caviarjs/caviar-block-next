@@ -115,7 +115,7 @@ class NextBlock extends Block {
 
     // this.hooks is a setter
     this.hooks = {
-      config: new SyncHook('nextConfig'),
+      nextConfig: new SyncHook('nextConfig'),
       webpackConfig: new SyncHook(['webpackConfig', 'nextContext'])
     }
   }
@@ -132,7 +132,7 @@ class NextBlock extends Block {
     )
 
     this._mergeWebpackFactory(nextConfig, webpackConfigFactory)
-    this.hooks.config.call(nextConfig, phase)
+    this.hooks.nextConfig.call(nextConfig, phase)
 
     return nextConfig
   }
