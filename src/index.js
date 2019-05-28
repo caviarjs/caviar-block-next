@@ -123,7 +123,8 @@ class NextBlock extends Block {
   _createNextConfig (
     phase,
     nextConfigFactory,
-    webpackConfigFactory
+    webpackConfigFactory,
+    caviarOptions
   ) {
     const nextConfig = nextConfigFactory(
       phase,
@@ -131,13 +132,18 @@ class NextBlock extends Block {
       {}
     )
 
-    this._mergeWebpackFactory(nextConfig, webpackConfigFactory)
-    this.hooks.nextConfig.call(nextConfig, phase)
+    this._mergeWebpackFactory(
+      nextConfig, webpackConfigFactory, caviarOptions)
+    this.hooks.nextConfig.call(nextConfig, phase, caviarOptions)
 
     return nextConfig
   }
 
-  _mergeWebpackFactory (nextConfig, webpackConfigFactory) {
+  _mergeWebpackFactory (
+    nextConfig,
+    webpackConfigFactory,
+    caviarOptions
+  ) {
     const {webpack} = nextConfig
 
     nextConfig.webpack = (webpackConfig, nextOptions) => {
@@ -157,7 +163,8 @@ class NextBlock extends Block {
         )
       }
 
-      this.hooks.webpackConfig.call(webpackConfig, nextOptions)
+      this.hooks.webpackConfig.call(
+        webpackConfig, nextOptions, caviarOptions)
       return webpackConfig
     }
   }
@@ -167,7 +174,9 @@ class NextBlock extends Block {
   // - caviarOptions `Object`
   //   - cwd
   //   - dev
-  async _build (config, {dev, cwd}) {
+  async _build (config, caviarOptions) {
+    const {dev, cwd} = caviarOptions
+
     if (dev) {
       return
     }
@@ -175,13 +184,16 @@ class NextBlock extends Block {
     const nextConfig = this._createNextConfig(
       PHASE_PRODUCTION_BUILD,
       config.next,
-      config.webpack
+      config.webpack,
+      caviarOptions
     )
 
     await requireModule('next/dist/build')(cwd, nextConfig)
   }
 
-  async _ready (config, {dev, cwd}) {
+  async _ready (config, caviarOptions) {
+    const {dev, cwd} = caviarOptions
+
     const phase = dev
       ? PHASE_DEVELOPMENT_SERVER
       : PHASE_PRODUCTION_SERVER
@@ -189,7 +201,8 @@ class NextBlock extends Block {
     const nextConfig = this._createNextConfig(
       phase,
       config.next,
-      config.nextWebpack
+      config.nextWebpack,
+      caviarOptions
     )
 
     const app = next({

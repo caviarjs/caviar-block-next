@@ -87,9 +87,20 @@ As the first and the only argument of the config anchor function, `extend` is ac
 
 See [Caviar Blocks]
 
-### config
+### nextConfig `SyncHook`
+
+Triggered after the next config is generated and before using.
+
+- **nextConfig**
+- **phase**
+- **caviarOptions**
 
 ### webpackConfig
+
+Triggered after webpack config is generated and before using.
+
+- **webpackConfig**
+- **caviarOptions**
 
 ## License
 
