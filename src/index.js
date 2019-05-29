@@ -1,4 +1,5 @@
 const {parse} = require('url')
+const {resolve} = require('path')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const e2k = require('express-to-koa')
@@ -87,6 +88,14 @@ const composeNextWebpack = ({
         wpModule)
     }
     : (...args) => runWebpackFactory(anchor, configFilepath, ...args)
+}
+
+const getNextDir = (cwd, {dir}) => {
+  if (!dir) {
+    return cwd
+  }
+
+  return resolve(cwd, dir)
 }
 
 // Thinking(DONE):
@@ -188,7 +197,10 @@ class NextBlock extends Block {
       caviarOptions
     )
 
-    await requireModule('next/dist/build')(cwd, nextConfig)
+    await requireModule('next/dist/build')(
+      getNextDir(cwd, nextConfig),
+      nextConfig
+    )
   }
 
   _create (config, caviarOptions) {
@@ -210,7 +222,7 @@ class NextBlock extends Block {
     return next({
       dev,
       conf: nextConfig,
-      dir: cwd
+      dir: getNextDir(cwd, nextConfig)
     })
   }
 
@@ -219,7 +231,8 @@ class NextBlock extends Block {
   }
 
   // Custom public methods
-  middleware () {
+  // Create the dev middleware of next
+  devMiddleware () {
     const nextApp = this.outlet
     const handler = nextApp.getRequestHandler()
     const middleware = (req, res) => {
