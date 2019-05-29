@@ -191,7 +191,7 @@ class NextBlock extends Block {
     await requireModule('next/dist/build')(cwd, nextConfig)
   }
 
-  async _ready (config, caviarOptions) {
+  _create (config, caviarOptions) {
     const {dev, cwd} = caviarOptions
 
     const phase = dev
@@ -205,14 +205,17 @@ class NextBlock extends Block {
       caviarOptions
     )
 
-    const app = next({
+    // TODO: ensure default config
+
+    return next({
       dev,
       conf: nextConfig,
       dir: cwd
     })
+  }
 
+  async _ready () {
     await this.outlet.prepare()
-    return app
   }
 
   // Custom public methods
