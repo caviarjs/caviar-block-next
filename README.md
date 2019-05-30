@@ -73,8 +73,8 @@ module.exports = {
 
 - **nextWebpackAnchorName** `string` the name of the config anchor for next webpack.
 
-### extend(plugins, nextConfigMixins): Function
-### extend(nextConfigMixins): Function
+### extend(plugins: Array, nextConfigMixins: object): Function
+### extend(nextConfigMixins: object): Function
 
 As the first and the only argument of the config anchor function, `extend` is actually the `withPlugins` method of [`next-compose-plugins`](https://www.npmjs.com/package/next-compose-plugins). Method `extend` extends the next config of the underlying caviar [layer], and provides the ability to merge the config from the current layer with the support of next build phases (such as `require('next/constants').PHASE_PRODUCTION_BUILD`).
 
