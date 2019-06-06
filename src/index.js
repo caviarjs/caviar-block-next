@@ -66,6 +66,13 @@ const runWebpackFactory = (factory, configFilepath, ...args) => {
   return config
 }
 
+// Usage
+// ```js
+// module.exports = (webpackConfig, nextOptions, webpackModule) => {
+//   // do something
+//   return webpackConfig
+// }
+// ```
 const composeNextWebpack = ({
   prev,
   anchor,
@@ -235,7 +242,7 @@ class NextBlock extends Block {
   devMiddleware () {
     const nextApp = this.outlet
     const handler = nextApp.getRequestHandler()
-    const middleware = (req, res) => {
+    return (req, res) => {
       const {
         // If you use a koa-based server
         // const e2k = require('express-to-koa')
@@ -259,20 +266,21 @@ class NextBlock extends Block {
 
       handler(req, res, parsedUrl)
     }
-
-    return middleware
   }
 }
 
-NextBlock.middleware2Koa = middleware => ctx => {
-  const {req} = ctx
+NextBlock.middleware2Koa = middleware => {
+  const converted = e2k(middleware)
+  return ctx => {
+    const {req} = ctx
 
-  req.params = {
-    ...req.params,
-    ...ctx.params
+    req.params = {
+      ...req.params,
+      ...ctx.params
+    }
+
+    return converted(ctx)
   }
-
-  return e2k(middleware)
 }
 
 module.exports = NextBlock
