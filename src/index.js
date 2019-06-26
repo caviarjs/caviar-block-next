@@ -22,6 +22,8 @@ const {
 const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
 
+const PHASE_BUILD = 'build'
+
 const createNextWithPlugins = (configFilepath, config) => {
   const wp = config
     ? extend(config).withPlugins
@@ -137,11 +139,21 @@ class NextBlock extends Block {
   }
 
   _createNextConfig (
-    phase,
     nextConfigFactory,
     webpackConfigFactory,
     caviarOptions
   ) {
+    const {
+      phase: caviarPhase,
+      dev
+    } = caviarOptions
+
+    const phase = caviarPhase === PHASE_BUILD
+      ? PHASE_PRODUCTION_BUILD
+      : dev
+        ? PHASE_DEVELOPMENT_SERVER
+        : PHASE_PRODUCTION_SERVER
+
     const nextConfig = nextConfigFactory(
       phase,
       // {defaultConfig: undefined}
@@ -185,40 +197,13 @@ class NextBlock extends Block {
     }
   }
 
-  // Override
-  // - config `Object` the composed configuration
-  // - caviarOptions `Object`
-  //   - cwd
-  //   - dev
-  async _build (config, caviarOptions) {
-    const {dev, cwd} = caviarOptions
-
-    if (dev) {
+  create (config, caviarOptions) {
+    const {dev, cwd, phase} = caviarOptions
+    if (phase === PHASE_BUILD) {
       return
     }
 
     const nextConfig = this._createNextConfig(
-      PHASE_PRODUCTION_BUILD,
-      config.next,
-      config.webpack,
-      caviarOptions
-    )
-
-    await requireModule('next/dist/build')(
-      getNextDir(cwd, nextConfig),
-      nextConfig
-    )
-  }
-
-  _create (config, caviarOptions) {
-    const {dev, cwd} = caviarOptions
-
-    const phase = dev
-      ? PHASE_DEVELOPMENT_SERVER
-      : PHASE_PRODUCTION_SERVER
-
-    const nextConfig = this._createNextConfig(
-      phase,
       config.next,
       config.nextWebpack,
       caviarOptions
@@ -233,7 +218,29 @@ class NextBlock extends Block {
     })
   }
 
-  async _ready () {
+  async run (config, caviarOptions) {
+    const {dev, cwd, phase} = caviarOptions
+
+    // phase build
+    if (phase === PHASE_BUILD) {
+      if (dev) {
+        return
+      }
+
+      const nextConfig = this._createNextConfig(
+        config.next,
+        config.webpack,
+        caviarOptions
+      )
+
+      await requireModule('next/dist/build')(
+        getNextDir(cwd, nextConfig),
+        nextConfig
+      )
+      return
+    }
+
+    // phase default
     await this.outlet.prepare()
   }
 
