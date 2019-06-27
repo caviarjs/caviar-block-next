@@ -5,6 +5,9 @@ const {extend, withPlugins} = require('next-compose-plugins')
 const e2k = require('express-to-koa')
 const next = require('next')
 const webpackModule = require('webpack')
+const {compose} = require('compose-middleware')
+const {serve} = require('serve-static')
+const {mount} = require('connect-mount')
 const {
   PHASE_PRODUCTION_BUILD,
   PHASE_PRODUCTION_SERVER,
@@ -23,7 +26,12 @@ const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
 
 const PHASE_BUILD = 'build'
+const DEFAULT_DIST_DIR = '.next'
 
+// options:
+// ...next options
+// - dir `path` the next dir relative to cwd
+// - static `object` options for serve-static
 const createNextWithPlugins = (configFilepath, config) => {
   const wp = config
     ? extend(config).withPlugins
@@ -31,7 +39,17 @@ const createNextWithPlugins = (configFilepath, config) => {
 
   return (...args) => {
     const [plugins, options] = withPluginsArgs(configFilepath, ...args)
-    return wp(plugins, options)
+    const config = wp(plugins, options)
+
+    // nextConfig.static
+    if (options.static) {
+      config.static = {
+        ...config.static,
+        ...options.static
+      }
+    }
+
+    return config
   }
 }
 
@@ -209,6 +227,8 @@ class NextBlock extends Block {
       caviarOptions
     )
 
+    this._nextConfig = nextConfig
+
     // TODO: ensure default config
 
     return next({
@@ -245,7 +265,16 @@ class NextBlock extends Block {
   }
 
   // Custom public methods
-  // Create the dev middleware of next
+  // Create the middleware of next
+  middleware () {
+    const {dev} = this.options
+    if (dev) {
+      return this.devMiddleware()
+    }
+
+    return this.prodMiddleware()
+  }
+
   devMiddleware () {
     const nextApp = this.outlet
     const handler = nextApp.getRequestHandler()
@@ -273,6 +302,30 @@ class NextBlock extends Block {
 
       handler(req, res, parsedUrl)
     }
+  }
+
+  prodMiddleware () {
+    const {cwd} = this.options
+    const {
+      static: serveStaticOptions,
+      distDir = DEFAULT_DIST_DIR
+    } = this._nextConfig
+
+    const nextDir = getNextDir(cwd, this._nextConfig)
+
+    const serveStatic = mount(
+      '/static',
+      serve(resolve(cwd, 'static'), serveStaticOptions)
+    )
+    const serveNextStatic = mount(
+      '/_next/static',
+      serve(resolve(nextDir, distDir, 'static'), serveStaticOptions)
+    )
+
+    return compose([
+      serveStatic,
+      serveNextStatic
+    ])
   }
 }
 
