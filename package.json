@@ -42,22 +42,22 @@
     "url": "https://github.com/caviarjs/next-block/issues"
   },
   "devDependencies": {
-    "@ostai/eslint-config": "^3.1.1",
-    "ava": "^1.4.1",
+    "@ostai/eslint-config": "^3.2.0",
+    "ava": "^2.1.0",
     "codecov": "^3.5.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-import": "^2.17.2",
+    "eslint": "^6.0.1",
+    "eslint-plugin-import": "^2.18.0",
     "next": "^8.1.0",
     "nyc": "^14.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "webpack": "^4.32.2"
+    "webpack": "^4.35.0"
   },
   "dependencies": {
     "compose-middleware": "^5.0.1",
     "connect-mount": "^1.0.0",
     "core-util-is": "^1.0.2",
-    "err-object": "^4.5.0",
+    "err-object": "^5.1.2",
     "express-to-koa": "^1.2.0",
     "next-compose-plugins": "^2.2.0",
     "serve-static": "^1.14.1",
