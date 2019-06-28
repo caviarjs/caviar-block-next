@@ -307,18 +307,23 @@ class NextBlock extends Block {
   prodMiddleware () {
     const {cwd} = this.options
     const {
+      // next-block specified property
       static: serveStaticOptions,
+      // next-block specified property
+      staticPublicPath = '/static',
+      // next-block specified property
+      nextStaticPublicPath = '/_next/static',
       distDir = DEFAULT_DIST_DIR
     } = this._nextConfig
 
     const nextDir = getNextDir(cwd, this._nextConfig)
 
     const serveStatic = mount(
-      '/static',
+      staticPublicPath,
       serve(resolve(cwd, 'static'), serveStaticOptions)
     )
     const serveNextStatic = mount(
-      '/_next/static',
+      nextStaticPublicPath,
       serve(resolve(nextDir, distDir, 'static'), serveStaticOptions)
     )
 
