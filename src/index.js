@@ -26,6 +26,7 @@ const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
 
 const PHASE_BUILD = 'build'
+const PHASE_DEFAULT = 'default'
 const DEFAULT_DIST_DIR = '.next'
 
 // options:
@@ -39,12 +40,12 @@ const createNextWithPlugins = (configFilepath, config) => {
 
   return (...args) => {
     const [plugins, options] = withPluginsArgs(configFilepath, ...args)
-    const config = wp(plugins, options)
+    const cfg = wp(plugins, options)
 
     // nextConfig.static
     if (options.static) {
-      config.static = {
-        ...config.static,
+      cfg.static = {
+        ...cfg.static,
         ...options.static
       }
     }
@@ -154,6 +155,8 @@ class NextBlock extends Block {
       nextConfig: new SyncHook('nextConfig'),
       webpackConfig: new SyncHook(['webpackConfig', 'nextContext'])
     }
+
+    this.phases = [PHASE_DEFAULT, PHASE_BUILD]
   }
 
   _createNextConfig (
