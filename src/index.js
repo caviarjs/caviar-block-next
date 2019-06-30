@@ -50,7 +50,7 @@ const createNextWithPlugins = (configFilepath, config) => {
       }
     }
 
-    return config
+    return cfg
   }
 }
 

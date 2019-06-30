@@ -10,7 +10,7 @@ TE('INVALID_ANCHOR_TYPE',
   'the config anchor of next in "%s" must be a function')
 
 TE('INVALID_ANCHOR_RETURN_TYPE',
-  'the config anchor of next in "%s" should return a function by using the first argument `withPlugins`')
+  'the config anchor of next in "%s" should return a function by using the first argument `extend`')
 
 TE('INVALID_WEBPACK_ANCHOR_TYPE',
   'the config anchor of nextWebpack in "%s" must be a function')
