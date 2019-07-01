@@ -80,6 +80,8 @@ As the first and the only argument of the config anchor function, `extend` is ac
 
 - **plugins** `Array<NextPlugin | [NextPlugin, NextPluginOptions]>` Array of next plugin instances. The first parameter of `withPlugins`
 - **nextConfigMixins?** `Object={}` the extra config to mix into the current next configuration. The second parameter of `withPlugins`
+  - **nextConfigMixins.dir** `string` the next dir relative to the current working directory
+  - **nextConfigMixins.static** `object` the options for [serve-static](https://www.npmjs.com/package/serve-static)
 
 ## Hooks
 
