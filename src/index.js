@@ -342,6 +342,7 @@ NextBlock.middleware2Koa = middleware => {
   return ctx => {
     const {req} = ctx
 
+    // TODO, query
     req.params = {
       ...req.params,
       ...ctx.params
