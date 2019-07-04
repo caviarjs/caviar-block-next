@@ -6,8 +6,8 @@ const e2k = require('express-to-koa')
 const next = require('next')
 const webpackModule = require('webpack')
 const {compose} = require('compose-middleware')
-const {serve} = require('serve-static')
-const {mount} = require('connect-mount')
+const serve = require('serve-static')
+const mount = require('connect-mount')
 const {
   PHASE_PRODUCTION_BUILD,
   PHASE_PRODUCTION_SERVER,
