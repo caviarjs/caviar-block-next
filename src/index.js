@@ -340,7 +340,7 @@ class NextBlock extends Block {
 
 NextBlock.middleware2Koa = middleware => {
   const converted = e2k(middleware)
-  return ctx => {
+  return (ctx, done) => {
     const {req} = ctx
 
     // TODO, query
@@ -349,7 +349,7 @@ NextBlock.middleware2Koa = middleware => {
       ...ctx.params
     }
 
-    return converted(ctx)
+    return converted(ctx, done)
   }
 }
 
