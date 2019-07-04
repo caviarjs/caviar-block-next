@@ -214,6 +214,7 @@ class NextBlock extends Block {
 
       this.hooks.webpackConfig.call(
         webpackConfig, nextOptions, caviarOptions)
+
       return webpackConfig
     }
   }
@@ -252,7 +253,7 @@ class NextBlock extends Block {
 
       const nextConfig = this._createNextConfig(
         config.next,
-        config.webpack,
+        config.nextWebpack,
         caviarOptions
       )
 
