@@ -1,6 +1,6 @@
 {
   "name": "@caviar/next-block",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "The official caviar block for next",
   "main": "src/index.js",
   "scripts": {
@@ -51,14 +51,14 @@
     "nyc": "^14.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "webpack": "^4.35.0"
+    "webpack": "^4.35.2"
   },
   "dependencies": {
     "compose-middleware": "^5.0.1",
     "connect-mount": "^1.0.0",
     "core-util-is": "^1.0.2",
     "err-object": "^5.1.2",
-    "express-to-koa": "^1.2.0",
+    "express-to-koa": "^2.0.0",
     "next-compose-plugins": "^2.2.0",
     "serve-static": "^1.14.1",
     "tapable": "^1.1.3"
