@@ -82,6 +82,7 @@ As the first and the only argument of the config anchor function, `extend` is ac
 - **nextConfigMixins?** `Object={}` the extra config to mix into the current next configuration. The second parameter of `withPlugins`
   - **nextConfigMixins.dir** `string` the next dir relative to the current working directory
   - **nextConfigMixins.static** `object` the options for [serve-static](https://www.npmjs.com/package/serve-static)
+  - **nextConfigMixins.staticFilePublicPath** `string=/static` the url pathname prefix to route to static files
 
 ## Hooks
 

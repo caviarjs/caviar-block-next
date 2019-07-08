@@ -323,7 +323,7 @@ class NextBlock extends Block {
       static: serveStaticOptions,
       // next-block specified property
       assetPrefix = EMPTY,
-      staticFolder = '/static',
+      staticFilePublicPath = '/static',
       distDir = DEFAULT_DIST_DIR
     } = this._nextConfig
 
@@ -334,7 +334,7 @@ class NextBlock extends Block {
     const nextDir = getNextDir(cwd, this._nextConfig)
 
     const serveStatic = mount(
-      ensurePath(staticFolder),
+      ensurePath(staticFilePublicPath),
       serve(resolve(nextDir, 'static'), serveStaticOptions)
     )
     const serveNextStatic = mount(
