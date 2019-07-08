@@ -17,6 +17,10 @@ const {
   SyncHook
 } = require('tapable')
 const {
+  ensureLeading,
+  removeEnding
+} = require('pre-suf')
+const {
   Block,
   utils: {
     requireModule
@@ -125,6 +129,10 @@ const getNextDir = (cwd, {dir}) => {
 
   return resolve(cwd, dir)
 }
+
+const SLASH = '/'
+const EMPTY = ''
+const ensurePath = p => removeEnding(ensureLeading(p, SLASH), SLASH)
 
 // Thinking(DONE):
 // inherit or delegate? inherit
@@ -314,20 +322,23 @@ class NextBlock extends Block {
       // next-block specified property
       static: serveStaticOptions,
       // next-block specified property
-      staticPublicPath = '/static',
-      // next-block specified property
-      nextStaticPublicPath = '/_next/static',
+      assetPrefix = EMPTY,
+      staticFolder = '/static',
       distDir = DEFAULT_DIST_DIR
     } = this._nextConfig
+
+    const nextStaticPublicPathPrefix = assetPrefix
+      ? ensurePath(parse(assetPrefix).pathname)
+      : EMPTY
 
     const nextDir = getNextDir(cwd, this._nextConfig)
 
     const serveStatic = mount(
-      staticPublicPath,
-      serve(resolve(cwd, 'static'), serveStaticOptions)
+      ensurePath(staticFolder),
+      serve(resolve(nextDir, 'static'), serveStaticOptions)
     )
     const serveNextStatic = mount(
-      nextStaticPublicPath,
+      `${nextStaticPublicPathPrefix}/_next/static`,
       serve(resolve(nextDir, distDir, 'static'), serveStaticOptions)
     )
 
