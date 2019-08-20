@@ -140,7 +140,7 @@ class NextBlock extends Block {
   constructor () {
     super()
 
-    // Binder will check the config structure
+    // Mixer will check the config structure
     // this.config is a setter
     this.config = {
       next: {
@@ -150,8 +150,8 @@ class NextBlock extends Block {
 
       nextWebpack: {
         type: 'compose',
-        // For binder, which means that
-        // the binder could skip defining the nextWebpack
+        // For mixer, which means that
+        // the mixer could skip defining the nextWebpack
         // allow that the anchor is not found in each layer
         optional: true,
         compose: composeNextWebpack

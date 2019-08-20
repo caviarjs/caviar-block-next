@@ -25,7 +25,7 @@ $ npm i @caviar/next-block
 
 ## Usage
 
-For most scenarios, `@caviar/next-block` is used by a caviar binder and usually should not be used directly.
+For most scenarios, `@caviar/next-block` is used by a caviar mixer and usually should not be used directly.
 
 ### Config
 
@@ -69,7 +69,7 @@ module.exports = {
 }
 ```
 
-- **nextAnchorName** `string` the name/key of the config anchor which is defined by the binder who uses `@caviar/next-block`
+- **nextAnchorName** `string` the name/key of the config anchor which is defined by the mixer who uses `@caviar/next-block`
 
 - **nextWebpackAnchorName** `string` the name of the config anchor for next webpack.
 
