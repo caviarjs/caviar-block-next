@@ -1,18 +1,18 @@
 const {parse} = require('url')
-const {resolve} = require('path')
+const {resolve, dirname} = require('path')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const e2k = require('express-to-koa')
-const next = require('next')
-const webpackModule = require('webpack')
+// const next = require('next')
+// const webpackModule = require('webpack')
 const {compose} = require('compose-middleware')
 const serve = require('serve-static')
 const mount = require('connect-mount')
-const {
-  PHASE_PRODUCTION_BUILD,
-  PHASE_PRODUCTION_SERVER,
-  PHASE_DEVELOPMENT_SERVER
-} = require('next/constants')
+// const {
+//   PHASE_PRODUCTION_BUILD,
+//   PHASE_PRODUCTION_SERVER,
+//   PHASE_DEVELOPMENT_SERVER
+// } = require('next/constants')
 const {
   SyncHook
 } = require('tapable')
@@ -28,6 +28,7 @@ const {
 } = require('caviar')
 const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
+const nextModule = require('./next-module')
 
 const PHASE_BUILD = 'build'
 const PHASE_DEFAULT = 'default'
@@ -165,6 +166,32 @@ class NextBlock extends Block {
     }
 
     this.phases = [PHASE_DEFAULT, PHASE_BUILD]
+
+    this._next = null
+  }
+
+  get next () {
+    if (this._next) {
+      return this._next
+    }
+
+    const {
+      resolved,
+      module
+    } = this.options.dev
+      ? nextModule.getNext()
+      : nextModule.getNextServer()
+
+    const root = dirname(resolved)
+
+    const constants = nextModule.getNextSubModule(root, 'constants')
+
+    return {
+      resolved,
+      module,
+      root,
+      constants
+    }
   }
 
   _createNextConfig (
@@ -177,11 +204,13 @@ class NextBlock extends Block {
       dev
     } = caviarOptions
 
+    const {constants} = this.next
+
     const phase = caviarPhase === PHASE_BUILD
-      ? PHASE_PRODUCTION_BUILD
+      ? constants.PHASE_PRODUCTION_BUILD
       : dev
-        ? PHASE_DEVELOPMENT_SERVER
-        : PHASE_PRODUCTION_SERVER
+        ? constants.PHASE_DEVELOPMENT_SERVER
+        : constants.PHASE_PRODUCTION_SERVER
 
     const nextConfig = nextConfigFactory(
       phase,
@@ -201,7 +230,16 @@ class NextBlock extends Block {
     webpackConfigFactory,
     caviarOptions
   ) {
+    // We do not require webpack to start the server in production
+    // so skip this method when dev is false
+    if (!this.options.dev) {
+      return
+    }
+
     const {webpack} = nextConfig
+    const {root} = this.next
+
+    const webpackModule = nextModule.getNextWebpack(root)
 
     nextConfig.webpack = (webpackConfig, nextOptions) => {
       if (webpack) {
@@ -241,9 +279,9 @@ class NextBlock extends Block {
 
     this._nextConfig = nextConfig
 
-    // TODO: ensure default config
+    const {module} = this.next
 
-    return next({
+    return module({
       dev,
       conf: nextConfig,
       dir: getNextDir(cwd, nextConfig)

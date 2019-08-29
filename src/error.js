@@ -26,6 +26,12 @@ const MORE_INFO = ', see "https://github.com/caviarjs/next-block#composeplugins-
 E('INVALID_COMPOSE_ARG',
   `invalid argument for compose in "%s"${MORE_INFO}`, TypeError)
 
+E('NEXT_NOT_FOUND',
+  'module "next" need to be installed')
+
+E('NEXT_SERVER_NOT_FOUND',
+  'module "next-server" need to be installed')
+
 module.exports = {
   error
 }
