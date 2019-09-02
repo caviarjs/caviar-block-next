@@ -161,8 +161,12 @@ class NextBlock extends Block {
 
     // this.hooks is a setter
     this.hooks = {
-      nextConfig: new SyncHook('nextConfig'),
-      webpackConfig: new SyncHook(['webpackConfig', 'nextContext'])
+      nextConfig: new SyncHook('nextConfig', 'phase', 'caviarOptions'),
+      webpackConfig: new SyncHook([
+        'webpackConfig',
+        'nextContext',
+        'caviarOptions'
+      ])
     }
 
     this.phases = [PHASE_DEFAULT, PHASE_BUILD]
