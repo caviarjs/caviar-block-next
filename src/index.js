@@ -38,13 +38,13 @@ const DEFAULT_DIST_DIR = '.next'
 // ...next options
 // - dir `path` the next dir relative to cwd
 // - static `object` options for serve-static
-const createNextWithPlugins = (configFilepath, config) => {
+const createNextWithPlugins = (configFile, config) => {
   const wp = config
     ? extend(config).withPlugins
     : withPlugins
 
   return (...args) => {
-    const [plugins, options] = withPluginsArgs(configFilepath, ...args)
+    const [plugins, options] = withPluginsArgs(configFile, ...args)
     const cfg = wp(plugins, options)
 
     // nextConfig.static
@@ -62,10 +62,10 @@ const createNextWithPlugins = (configFilepath, config) => {
 const composeNext = ({
   prev,
   anchor,
-  configFilepath
+  configFile
 }) => {
   if (!isFunction(anchor)) {
-    throw error('INVALID_ANCHOR_TYPE', configFilepath, anchor)
+    throw error('INVALID_ANCHOR_TYPE', configFile, anchor)
   }
 
   // Usage
@@ -73,20 +73,20 @@ const composeNext = ({
   // module.exports = withPlugins => withPlugins([...plugins], newConfig)
   // ```
   // withPlugins <- createNextWithPlugins(prev)
-  const result = anchor(createNextWithPlugins(configFilepath, prev))
+  const result = anchor(createNextWithPlugins(configFile, prev))
 
   if (!isFunction(result)) {
-    throw error('INVALID_ANCHOR_RETURN_TYPE', configFilepath, result)
+    throw error('INVALID_ANCHOR_RETURN_TYPE', configFile, result)
   }
 
   return result
 }
 
-const runWebpackFactory = (factory, configFilepath, ...args) => {
+const runWebpackFactory = (factory, configFile, ...args) => {
   const config = factory(...args)
 
   if (!isObject(config)) {
-    throw error('INVALID_WEBPACK_ANCHOR_RETURN_TYPE', configFilepath, config)
+    throw error('INVALID_WEBPACK_ANCHOR_RETURN_TYPE', configFile, config)
   }
 
   return config
@@ -102,10 +102,10 @@ const runWebpackFactory = (factory, configFilepath, ...args) => {
 const composeNextWebpack = ({
   prev,
   anchor,
-  configFilepath
+  configFile
 }) => {
   if (!isFunction(anchor)) {
-    throw error('INVALID_WEBPACK_ANCHOR_TYPE', configFilepath, anchor)
+    throw error('INVALID_WEBPACK_ANCHOR_TYPE', configFile, anchor)
   }
 
   return prev
@@ -115,12 +115,12 @@ const composeNextWebpack = ({
         nextOptions,
         wpModule
       )
-      return runWebpackFactory(anchor, configFilepath,
+      return runWebpackFactory(anchor, configFile,
         config,
         nextOptions,
         wpModule)
     }
-    : (...args) => runWebpackFactory(anchor, configFilepath, ...args)
+    : (...args) => runWebpackFactory(anchor, configFile, ...args)
 }
 
 const getNextDir = (cwd, {dir}) => {
