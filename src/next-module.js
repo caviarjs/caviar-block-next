@@ -34,7 +34,7 @@ const getNext = createGet('next', 'NEXT_NOT_FOUND')
 
 // Get the webpack module which next uses
 const getNextWebpack = nextRoot => {
-  const resolved = resolveFrom('webpack', nextRoot)
+  const resolved = resolveFrom(nextRoot, 'webpack')
   return require(resolved)
 }
 
