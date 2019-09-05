@@ -1,5 +1,5 @@
 const {parse} = require('url')
-const {resolve, dirname} = require('path')
+const {resolve} = require('path')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const e2k = require('express-to-koa')
@@ -180,18 +180,15 @@ class NextBlock extends Block {
     }
 
     const {
-      resolved,
+      root,
       module
     } = this.options.dev
       ? nextModule.getNext()
       : nextModule.getNextServer()
 
-    const root = dirname(resolved)
-
     const constants = nextModule.getNextSubModule(root, 'constants')
 
     return {
-      resolved,
       module,
       root,
       constants

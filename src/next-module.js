@@ -1,4 +1,4 @@
-const {join} = require('path')
+const {join, dirname} = require('path')
 const resolveFrom = require('resolve-from')
 
 const {error} = require('./error')
@@ -22,10 +22,12 @@ const cleanModule = module => module.__esModule
 
 const createGet = (id, errorCode) => () => {
   const resolved = resolve(id, errorCode)
+  const root = dirname(require.resolve(`${id}/package.json`))
 
   return {
     module: cleanModule(require(resolved)),
-    resolved
+    // The root directory of a package
+    root
   }
 }
 
