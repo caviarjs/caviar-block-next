@@ -312,7 +312,7 @@ class NextBlock extends Block {
     }
 
     // phase default
-    await this.outlet.prepare()
+    await this.created.prepare()
   }
 
   // Custom public methods
@@ -327,7 +327,7 @@ class NextBlock extends Block {
   }
 
   devMiddleware () {
-    const nextApp = this.outlet
+    const nextApp = this.created
     const handler = nextApp.getRequestHandler()
     return (req, res) => {
       const {

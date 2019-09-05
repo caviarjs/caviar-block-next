@@ -15,10 +15,10 @@ const resolve = (id, errorCode) => {
   return resolved
 }
 
+// Do NOT detect __esModule
+
 // eslint-disable-next-line no-underscore-dangle
-const cleanModule = module => module.__esModule
-  ? module.default
-  : module
+const cleanModule = module => module.default || module
 
 const createGet = (id, errorCode) => () => {
   const resolved = resolve(id, errorCode)
@@ -46,6 +46,7 @@ const getNextServer = createGet('next', 'NEXT_NOT_FOUND')
 // Get next/constants or next-server/constants
 const getNextSubModule = (nextRoot, id) => {
   const path = join(nextRoot, id)
+
   return cleanModule(require(path))
 }
 
