@@ -3,16 +3,11 @@ const {resolve} = require('path')
 const {isFunction, isObject} = require('core-util-is')
 const {extend, withPlugins} = require('next-compose-plugins')
 const e2k = require('express-to-koa')
-// const next = require('next')
-// const webpackModule = require('webpack')
+
 const {compose} = require('compose-middleware')
 const serve = require('serve-static')
 const mount = require('connect-mount')
-// const {
-//   PHASE_PRODUCTION_BUILD,
-//   PHASE_PRODUCTION_SERVER,
-//   PHASE_DEVELOPMENT_SERVER
-// } = require('next/constants')
+
 const {
   SyncHook
 } = require('tapable')

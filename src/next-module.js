@@ -20,14 +20,22 @@ const resolve = (id, errorCode) => {
 // eslint-disable-next-line no-underscore-dangle
 const cleanModule = module => module.default || module
 
-const createGet = (id, errorCode) => () => {
-  const resolved = resolve(id, errorCode)
-  const root = dirname(require.resolve(`${id}/package.json`))
+const createGet = (id, errorCode) => {
+  let cached
 
-  return {
-    module: cleanModule(require(resolved)),
-    // The root directory of a package
-    root
+  return () => {
+    if (cached) {
+      return cached
+    }
+
+    const resolved = resolve(id, errorCode)
+    const root = dirname(require.resolve(`${id}/package.json`))
+
+    return cached = {
+      module: cleanModule(require(resolved)),
+      // The root directory of a package
+      root
+    }
   }
 }
 
@@ -41,12 +49,16 @@ const getNextWebpack = nextRoot => {
 }
 
 // Get the next-server module installed
-const getNextServer = createGet('next', 'NEXT_NOT_FOUND')
+const getNextServer = createGet('next-server', 'NEXT_NOT_FOUND')
+
+const resolveNextSubModule = (nextRoot, id) => {
+  const path = join(nextRoot, id)
+  return require.resolve(path)
+}
 
 // Get next/constants or next-server/constants
 const getNextSubModule = (nextRoot, id) => {
-  const path = join(nextRoot, id)
-
+  const path = resolveNextSubModule(nextRoot, id)
   return cleanModule(require(path))
 }
 
@@ -54,5 +66,6 @@ module.exports = {
   getNext,
   getNextWebpack,
   getNextServer,
+  // resolveNextSubModule,
   getNextSubModule
 }
