@@ -224,9 +224,15 @@ class NextBlock extends Block {
     webpackConfigFactory,
     caviarOptions
   ) {
+    const {dev, phase} = this.options
+
     // We do not require webpack to start the server in production
     // so skip this method when dev is false
-    if (!this.options.dev) {
+
+    // We only allow webpack when
+    // - in dev mode
+    // - when building the project
+    if (!dev && phase !== PHASE_BUILD) {
       return
     }
 
