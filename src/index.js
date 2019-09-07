@@ -7,6 +7,7 @@ const e2k = require('express-to-koa')
 const {compose} = require('compose-middleware')
 const serve = require('serve-static')
 const mount = require('connect-mount')
+const {requireModule} = require('require-esmodule')
 
 const {
   SyncHook
@@ -16,10 +17,7 @@ const {
   removeEnding
 } = require('pre-suf')
 const {
-  Block,
-  utils: {
-    requireModule
-  }
+  Block
 } = require('caviar')
 const {error} = require('./error')
 const {withPluginsArgs} = require('./options')
