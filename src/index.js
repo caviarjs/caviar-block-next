@@ -154,10 +154,11 @@ class NextBlock extends Block {
 
     // this.hooks is a setter
     this.hooks = {
-      nextConfig: new SyncHook('nextConfig', 'phase', 'caviarOptions'),
+      nextConfig: new SyncHook('nextConfig', 'caviarOptions'),
       webpackConfig: new SyncHook([
         'webpackConfig',
         'nextContext',
+        'webpackModule',
         'caviarOptions'
       ])
     }
@@ -214,7 +215,7 @@ class NextBlock extends Block {
 
     this._mergeWebpackFactory(
       nextConfig, webpackConfigFactory, caviarOptions)
-    this.hooks.nextConfig.call(nextConfig, phase, caviarOptions)
+    this.hooks.nextConfig.call(nextConfig, caviarOptions)
 
     return nextConfig
   }
@@ -259,7 +260,7 @@ class NextBlock extends Block {
       }
 
       this.hooks.webpackConfig.call(
-        webpackConfig, nextOptions, caviarOptions)
+        webpackConfig, nextOptions, webpackModule, caviarOptions)
 
       return webpackConfig
     }
@@ -357,12 +358,13 @@ class NextBlock extends Block {
   prodMiddleware () {
     const {cwd} = this.options
     const {
+      assetPrefix = EMPTY,
+      distDir = DEFAULT_DIST_DIR,
+
       // next-block specified property
       static: serveStaticOptions,
       // next-block specified property
-      assetPrefix = EMPTY,
-      staticFilePublicPath = '/static',
-      distDir = DEFAULT_DIST_DIR
+      staticFilePublicPath = '/static'
     } = this._nextConfig
 
     const nextStaticPublicPathPrefix = assetPrefix

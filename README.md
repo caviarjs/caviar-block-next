@@ -97,7 +97,6 @@ Triggered after the next config is generated and before using.
 Callback parameters:
 
 - **nextConfig**
-- **phase**
 - **caviarOptions**
 
 ### webpackConfig
@@ -105,6 +104,8 @@ Callback parameters:
 Triggered after webpack config is generated and before using.
 
 - **webpackConfig**
+- **nextOptions**
+- **webpackModule**
 - **caviarOptions**
 
 ## License
