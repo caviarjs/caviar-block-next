@@ -1,6 +1,6 @@
 {
   "name": "@caviar/next-block",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "The official caviar block for next",
   "main": "src/index.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "@caviar/test": "^1.0.1",
     "@ostai/eslint-config": "^3.5.0",
     "ava": "^2.4.0",
-    "caviar": "^5.5.0",
+    "caviar": "^6.0.0",
     "codecov": "^3.5.0",
     "eslint": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
@@ -69,7 +69,7 @@
     "tapable": "^1.1.3"
   },
   "peerDependencies": {
-    "caviar": "^5.4.2",
+    "caviar": "^6.0.0",
     "next": "^9.0.5"
   }
 }
