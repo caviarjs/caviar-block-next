@@ -1,7 +1,9 @@
 const test = require('ava')
-const log = require('util').debuglog('@caviar/next-block')
-const block_next = require('../src')
+const {runBlock} = require('@caviar/test')
+const NextBlock = require('..')
 
-test('description', t => {
-  t.is(true, true)
+test('basic', async t => {
+  const block = await runBlock(NextBlock)
+
+  t.pass()
 })
