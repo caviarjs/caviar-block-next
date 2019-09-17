@@ -1,9 +1,20 @@
 const test = require('ava')
-const {runBlock} = require('@caviar/test')
-const NextBlock = require('..')
+const create = require('./create')
 
 test('basic', async t => {
-  const block = await runBlock(NextBlock)
+  const {get} = await create('BASIC', {
+    configChain: [{
+      next (withPlugins) {
+        return withPlugins({
+          distDir: '.next'
+        })
+      }
+    }],
+    dev: true
+  })
 
-  t.pass()
+  const {statusCode, text} = await get('/index')
+
+  t.is(statusCode, 200)
+  t.true(text.includes('hello'))
 })

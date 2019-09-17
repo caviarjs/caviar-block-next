@@ -29,9 +29,11 @@ For most scenarios, `@caviar/next-block` is used by a caviar mixer and usually s
 
 ### Config
 
-In `caviar.config.js`
+In `[configFile].js`
 
 ```js
+const CSS = require('@zeit/next-css')
+
 module.exports = {
   ...otherAnchors,
 
@@ -40,7 +42,7 @@ module.exports = {
     // The config anchor of next should always returns
     // a FUNCTION!
     return compose([
-      withCSS
+      CSS
     ], {
       distDir: '.next'
     })
@@ -69,7 +71,7 @@ module.exports = {
 }
 ```
 
-- **nextAnchorName** `string` the name/key of the config anchor which is defined by the mixer who uses `@caviar/next-block`
+- **nextAnchorName** `string` the name/key of the config anchor which is defined by the mixer who mixes `@caviar/next-block`
 
 - **nextWebpackAnchorName** `string` the name of the config anchor for next webpack.
 
