@@ -1,6 +1,6 @@
 {
   "name": "@caviar/next-block",
-  "version": "4.0.3",
+  "version": "4.1.0",
   "description": "The official caviar block for next",
   "main": "src/index.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "url": "https://github.com/caviarjs/next-block/issues"
   },
   "devDependencies": {
-    "@caviar/test": "^2.0.0",
+    "@caviar/test": "^2.0.1",
     "@ostai/eslint-config": "^3.5.0",
     "ava": "^2.4.0",
     "caviar": "^6.0.0",
