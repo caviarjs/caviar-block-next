@@ -12,7 +12,9 @@ test('basic', async t => {
     configChain: [{
       next: nextConfig
     }, {
-      next: nextConfig
+      next: withPlugins => withPlugins([], {
+        static: {}
+      })
     }],
     dev: true
   })
