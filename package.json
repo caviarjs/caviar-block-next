@@ -49,6 +49,8 @@
     "codecov": "^3.5.0",
     "eslint": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
+    "express": "^4.17.1",
+    "koa": "^2.8.1",
     "next": "^8.1.0",
     "nyc": "^14.1.1",
     "react": "^16.9.0",

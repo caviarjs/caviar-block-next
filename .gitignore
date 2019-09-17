@@ -5,6 +5,7 @@
 /package-lock.json
 /*.tgz
 /test/fixtures/simple-*
+no-track.js
 
 
 # Numerous always-ignore extensions

@@ -387,6 +387,19 @@ class NextBlock extends Block {
       serveNextStatic
     ])
   }
+
+  // Render a request to html
+  // @params `Object` extra params
+  render (req, res, pagePath, params) {
+    const nextApp = this.created
+
+    const {query} = parse(req.url, true)
+
+    return nextApp.renderToHTML(req, res, pagePath, {
+      ...query,
+      ...params
+    })
+  }
 }
 
 NextBlock.middleware2Koa = middleware => {
