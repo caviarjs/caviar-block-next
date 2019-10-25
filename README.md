@@ -44,7 +44,11 @@ module.exports = {
     return compose([
       CSS
     ], {
-      distDir: '.next'
+      distDir: '.next',
+      static: {
+        // Set cache-control for static files as max-age=86400
+        maxAge: 86400
+      }
     })
   },
 

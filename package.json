@@ -1,6 +1,6 @@
 {
   "name": "@caviar/next-block",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "The official caviar block for next",
   "main": "src/index.js",
   "scripts": {
