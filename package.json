@@ -51,7 +51,7 @@
     "eslint-plugin-import": "^2.18.2",
     "express": "^4.17.1",
     "koa": "^2.8.1",
-    "next": "^8.1.0",
+    "next": "^9.3.3",
     "nyc": "^14.1.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -74,6 +74,6 @@
   },
   "peerDependencies": {
     "caviar": "^6.0.1",
-    "next": "^8.1.0"
+    "next": "^9.3.3"
   }
 }
